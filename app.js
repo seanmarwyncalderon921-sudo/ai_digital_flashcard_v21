@@ -2812,9 +2812,17 @@ getElement("open-shared-deck-btn")?.addEventListener("click", () => {
 
 const shareDeckBtn = getElement("share-deck-btn");
 if (shareDeckBtn) shareDeckBtn.addEventListener("click", async () => {
+  if (!window.sapcFirebase?.configured) {
+    showToast("Firebase did not load, so sharing is unavailable. Refresh the page or redeploy the current app files.", "error");
+    return;
+  }
   const user = window.sapcFirebase?.getCurrentUser();
-  if (!user || !cards.length) {
-    showToast("Sign in and prepare a deck before sharing.", "error");
+  if (!user) {
+    showToast("Sign in before sharing a deck.", "error");
+    return;
+  }
+  if (!cards.length) {
+    showToast("Generate or import flashcards before sharing.", "error");
     return;
   }
   try {
